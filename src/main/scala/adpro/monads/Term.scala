@@ -52,8 +52,7 @@ object ExceptionEvaluator {
       case Raise(e) => Raise(e)
       case Return(a) => eval(u) match {
         case Raise(e) => Raise(e)
-        case Return(b) => if (b == 0)
-                            Raise("divide by zero")
+        case Return(b) => if (b == 0) Raise("divide by zero")
                           else Return(a/b)
       }
     }
@@ -273,8 +272,9 @@ object OutputEvaluatorWithMonads {
     case Div (t,u) => for {
       a <- eval (t)
       b <- eval (u)
-      r <- out (line (Div(t,u))(a/b)).flatMap(_ => M.unit (a/b))
-    } yield r
+      r <- out (line (Div(t,u))(a/b))
+      t <- M.unit (a/b)
+    } yield t
   }
 
   // Discuss in the group how the monadic evaluator with output differs from
