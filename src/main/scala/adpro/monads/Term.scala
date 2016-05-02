@@ -163,39 +163,43 @@ object BasicEvaluatorWithMonads {
   // flatMap.
 }
 //
-// // Section 2.7 [Wadler] The monadic evaluator with exceptions
-//
-// object ExceptionEvaluatorWithMonads {
-//
-//   type Exception = String
-//
-//   trait M[+A] extends Monad[A,M]{
-//
-//     def flatMap[B] (k: A => M[B]) :M[B] = this match {
-//        case Raise (e) => Raise (e)
-//        case Return (a) => k(a)
-//     }
-//
-//     def map[B] (k: A => B) :M[B] = this match {
-//       case Raise (e) => Raise (e)
-//       case Return (a) => Return (k(a))
-//     }
-//   }
-//
-//   object M extends MonadOps[M] { def unit[A] (a : A) :M[A] = Return (a) }
-//
-//   case class Raise (e: String) extends M[Nothing]
-//   case class Return[A] (a: A) extends M[A]
-//
-//   // TODO: complete the evaluator
-//   def eval (term :Term) :M[Int] = term match {
-//     case Cons (a) => M.unit (a)
-//     case Div (t,u) => ...
-//   }
-//
-//   // TODO: Discuss in the group how the monadic evaluator with exceptions
-//   // differs from the monadic basic one
-// }
+// Section 2.7 [Wadler] The monadic evaluator with exceptions
+
+object ExceptionEvaluatorWithMonads {
+
+  type Exception = String
+
+  trait M[+A] extends Monad[A,M]{
+
+    def flatMap[B] (k: A => M[B]) :M[B] = this match {
+       case Raise (e) => Raise (e)
+       case Return (a) => k(a)
+    }
+
+    def map[B] (k: A => B) :M[B] = this match {
+      case Raise (e) => Raise (e)
+      case Return (a) => Return (k(a))
+    }
+  }
+
+  object M extends MonadOps[M] { def unit[A] (a : A) :M[A] = Return (a) }
+
+  case class Raise (e: String) extends M[Nothing]
+  case class Return[A] (a: A) extends M[A]
+
+  // TODO: complete the evaluator
+  def eval (term :Term) :M[Int] = term match {
+    case Cons (a) => M.unit (a)
+    case Div (t,u) => for {
+      a <- eval (t)
+      b <- eval (u)
+      r <- if (b == 0) Raise("divide by zero") else M.unit (a/b)
+    } yield r
+  }
+
+  // TODO: Discuss in the group how the monadic evaluator with exceptions
+  // differs from the monadic basic one
+}
 //
 // // Section 2.8 [Wadler] Variation two, revisited: State
 //

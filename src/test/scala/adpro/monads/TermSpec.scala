@@ -145,41 +145,41 @@ class  TermSpec extends FlatSpec with Checkers {
   }
 //
 //
-//  // Section 2.7 [Wadler] Variation one, revisited: Exceptions
-//
-//  behavior of "Monadic exception eval"
-//
-//  it should "be Return(42) [Wadler]" in {
-//    ExceptionEvaluatorWithMonads.eval (answer) shouldBe
-//      ExceptionEvaluatorWithMonads.Return(42)
-//  }
-//
-//  it should "return an exception on division by zero" in {
-//    (ExceptionEvaluatorWithMonads.eval (error)) shouldBe
-//      a [ExceptionEvaluatorWithMonads.Raise]
-//  }
-//
-//  def toBasic (m: ExceptionEvaluatorWithMonads.M[Int])
-//    : ExceptionEvaluator.M[Int] =  m match {
-//      case ExceptionEvaluatorWithMonads.Raise (s) => ExceptionEvaluator.Raise(s)
-//      case ExceptionEvaluatorWithMonads.Return (a) => ExceptionEvaluator.Return(a)
-//  }
-//
-//
-//
-//  behavior of "Exception evalutors"
-//
-//  it should "behave identically (safe)" in check {
-//    forAll (genSafeTerm) ( (t: Term) =>
-//      toBasic(ExceptionEvaluatorWithMonads.eval (t)) ==
-//        ExceptionEvaluator.eval(t))
-//  }
-//
-//  it should "behave identically (unsafe)" in check {
-//    forAll (genUnsafeTerm) ( (t: Term) =>
-//      toBasic(ExceptionEvaluatorWithMonads.eval (t)) ==
-//        ExceptionEvaluator.eval(t))
-//  }
+  // Section 2.7 [Wadler] Variation one, revisited: Exceptions
+
+  behavior of "Monadic exception eval"
+
+  it should "be Return(42) [Wadler]" in {
+    ExceptionEvaluatorWithMonads.eval (answer) shouldBe
+      ExceptionEvaluatorWithMonads.Return(42)
+  }
+
+  it should "return an exception on division by zero" in {
+    (ExceptionEvaluatorWithMonads.eval (error)) shouldBe
+      a [ExceptionEvaluatorWithMonads.Raise]
+  }
+
+  def toBasic (m: ExceptionEvaluatorWithMonads.M[Int])
+    : ExceptionEvaluator.M[Int] =  m match {
+      case ExceptionEvaluatorWithMonads.Raise (s) => ExceptionEvaluator.Raise(s)
+      case ExceptionEvaluatorWithMonads.Return (a) => ExceptionEvaluator.Return(a)
+  }
+
+
+
+  behavior of "Exception evalutors"
+
+  it should "behave identically (safe)" in check {
+    forAll (genSafeTerm) ( (t: Term) =>
+      toBasic(ExceptionEvaluatorWithMonads.eval (t)) ==
+        ExceptionEvaluator.eval(t))
+  }
+
+  it should "behave identically (unsafe)" in check {
+    forAll (genUnsafeTerm) ( (t: Term) =>
+      toBasic(ExceptionEvaluatorWithMonads.eval (t)) ==
+        ExceptionEvaluator.eval(t))
+  }
 //
 //  // Section 2.8 [Wadler] Variation two, revisited: State
 //
