@@ -201,35 +201,42 @@ object ExceptionEvaluatorWithMonads {
   // differs from the monadic basic one
 }
 //
-// // Section 2.8 [Wadler] Variation two, revisited: State
-//
-// object StateEvaluatorWithMonads {
-//
-//   type State = Int
-//
-//   case class M[+A] (step: State => (A,State)) extends Monad[A,M] {
-//
-//     // flatMap is bind or (*) in the paper
-//     def flatMap[B] (k :A => M[B]) = M[B] {
-//       x => { val (a,y) = this.step (x); k(a).step(y) } }
-//
-//     def map[B] (k :A => B) :M[B] =
-//       M[B] { x => { val (a,y) = this.step(x); (k(a),y) } }
-//   }
-//
-//   // TODO: complete the implementation of unit, based on the paper
-//   object M extends MonadOps[M] { def unit[A] (a : A) :M[A] = ... }
-//
-//   // TODO: complete the implementation of the evalutor:
-//   def eval (term :Term) :M[State] = term match {
-//     case Cons (a) => M.unit (a)
-//     case Div (t,u) => ...
-//   }
-//
-//   // TODO: Discuss in the group how the monadic evaluator with counter differs
-//   // from the monadic basic one (or the one with exceptions)
-//
-// }
+// Section 2.8 [Wadler] Variation two, revisited: State
+
+object StateEvaluatorWithMonads {
+
+  type State = Int
+
+  case class M[+A] (step: State => (A,State)) extends Monad[A,M] {
+
+    // flatMap is bind or (*) in the paper
+    def flatMap[B] (k :A => M[B]) = M[B] {
+      x => { val (a,y) = this.step (x); k(a).step(y) } }
+
+    def map[B] (k :A => B) :M[B] =
+      M[B] { x => { val (a,y) = this.step(x); (k(a),y) } }
+  }
+
+  // TODO: complete the implementation of unit, based on the paper
+  object M extends MonadOps[M] { def unit[A] (a : A) :M[A] = M[A] (x => (a,x)) }
+
+  private def tick[A]: M[Unit] = M[Unit] (x => ((), x+1))
+
+  // TODO: complete the implementation of the evalutor:
+  def eval (term :Term) :M[State] = term match {
+    case Cons (a) => M.unit (a)
+    case Div (t,u) => for {
+      a <- eval (t)
+      b <- eval (u)
+      t <- tick
+      r <- M.unit (a/b)
+    } yield r
+  }
+
+  // TODO: Discuss in the group how the monadic evaluator with counter differs
+  // from the monadic basic one (or the one with exceptions)
+
+}
 //
 // // Section 2.9 [Wadler] Output evaluator
 //
