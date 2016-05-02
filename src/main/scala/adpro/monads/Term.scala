@@ -238,32 +238,44 @@ object StateEvaluatorWithMonads {
 
 }
 //
-// // Section 2.9 [Wadler] Output evaluator
-//
-// object OutputEvaluatorWithMonads {
-//
-//   type Output = String
-//
-//   case class M[+A] (o: Output, a: A) {
-//
-//     // flatMap is (*) in [Wadler]
-//     // TODO: implement flatMap
-//     def flatMap[B] (k :A => M[B]) = ...
-//
-//     def map[B] (k :A => B) :M[B] = M[B] (this.o, k(this.a))
-//
-//   }
-//
-//   // TODO: implement unit
-//   object M { def unit[A] (a : A) :M[A] = ... }
-//
-//   def line (a :Term) (v :Int) :Output =
-//     "eval(" + a.toString + ") <= " + v.toString + "\n"
-//
-//   // TODO: implement eval
-//   def eval (term :Term) :M[Int] = ...
-//
-//   // Discuss in the group how the monadic evaluator with output differs from
-//   // the monadic basic one (or the one with state/counter).
-// }
+// Section 2.9 [Wadler] Output evaluator
+
+object OutputEvaluatorWithMonads {
+
+  type Output = String
+
+  case class M[+A] (o: Output, a: A) {
+
+    // flatMap is (*) in [Wadler]
+    // TODO: implement flatMap
+    def flatMap[B] (k :A => M[B]): M[B] = {
+      val (x,a) = (this.o, this.a)
+      val kz = k (a)
+      val (y,b) = (kz.o, kz.a)
+      M[B] (x++y, b)
+    }
+
+    def map[B] (k :A => B) :M[B] = M[B] (this.o, k(this.a))
+
+  }
+
+  // TODO: implement unit
+  object M { def unit[A] (a : A) :M[A] = M[A] ("", a) } 
+
+  def line (a :Term) (v :Int) :Output =
+    "eval(" + a.toString + ") <= " + v.toString + "\n"
+
+  // TODO: implement eval
+  def eval (term :Term) :M[Int] = term match {
+    case Cons (a) => M.unit (a)
+    case Div (t,u) => for {
+      a <- eval (t)
+      b <- eval (u)
+      r <- M.unit (a/b)
+    } yield r
+  }
+
+  // Discuss in the group how the monadic evaluator with output differs from
+  // the monadic basic one (or the one with state/counter).
+}
 
