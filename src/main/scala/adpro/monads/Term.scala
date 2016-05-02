@@ -63,22 +63,26 @@ object ExceptionEvaluator {
   // BasicEvaluator to the exception evaluator (no need to write anything).
 }
 
-// // Section 2.3 [Wadler] Variation two: State
-//
-// object StateEvaluator {
-//
-//   type State = Int
-//   case class M[+A] (step: State => (A,State))
-//
-//   // TODO: complete the implementation of the evaluator as per the spec in the
-//   // paper.
-//   def eval (term :Term) :M[Int] = term match {
-//     case Cons (a) => M[Int] (x => (a,x))
-//     case Div (t,u) => ...
-//   }
-//
-// }
-//
+// Section 2.3 [Wadler] Variation two: State
+
+object StateEvaluator {
+
+  type State = Int
+  case class M[+A] (step: State => (A,State))
+
+  // TODO: complete the implementation of the evaluator as per the spec in the
+  // paper.
+  def eval (term :Term) :M[Int] = term match {
+    case Cons (a) => M[Int] (x => (a,x))
+    case Div (t,u) => M[Int] (x => {
+      val (a,y) = eval(t).step(x)
+      val (b,z) = eval(u).step(y)
+      (a/b,z+1)
+    })
+  }
+
+}
+
 // // Section 2.4 [Wadler] Variation three: Output
 //
 // object OutputEvaluator {

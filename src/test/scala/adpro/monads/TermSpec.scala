@@ -75,21 +75,21 @@ class  TermSpec extends FlatSpec with Checkers {
   it should "return an exception value for a division by zero" in
   { ExceptionEvaluator.eval (error) shouldBe a [ExceptionEvaluator.Raise] }
 
-//  // Section 2.3 [Wadler] Variation two: State
-//
-//  behavior of "State eval"
-//  it should "should count two divisions" in check {
-//    forAll { (n: Int) =>
-//      StateEvaluator.eval (answer).step (n) == (42,n+2) } }
-//
-//  it should "should count no divisions" in check {
-//    forAll { (n: Int) =>
-//      StateEvaluator.eval (const).step (n) == (42,n) } }
-//
-//  it should "throw a scala exception on division by 0" in
-//  { intercept[java.lang.ArithmeticException] {
-//    StateEvaluator.eval (error).step (0) } }
-//
+  // Section 2.3 [Wadler] Variation two: State
+
+  behavior of "State eval"
+  it should "should count two divisions" in check {
+    forAll { (n: Int) =>
+      StateEvaluator.eval (answer).step (n) == (42,n+2) } }
+
+  it should "should count no divisions" in check {
+    forAll { (n: Int) =>
+      StateEvaluator.eval (const).step (n) == (42,n) } }
+
+  it should "throw a scala exception on division by 0" in
+  { intercept[java.lang.ArithmeticException] {
+    StateEvaluator.eval (error).step (0) } }
+
 //  // Section 2.4 [Wadler] Variation three: Output
 //
 //  val result = "eval(Cons(1972)) <= 1972\n" +
