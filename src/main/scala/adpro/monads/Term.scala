@@ -265,13 +265,15 @@ object OutputEvaluatorWithMonads {
   def line (a :Term) (v :Int) :Output =
     "eval(" + a.toString + ") <= " + v.toString + "\n"
 
+  private def out(o: Output): M[Unit] = M[Unit] (o, ())
+
   // TODO: implement eval
   def eval (term :Term) :M[Int] = term match {
-    case Cons (a) => M.unit (a)
+    case Cons (a) => M[Int] (line (Cons(a))(a), a)
     case Div (t,u) => for {
       a <- eval (t)
       b <- eval (u)
-      r <- M.unit (a/b)
+      r <- out (line (Div(t,u))(a/b)).flatMap(_ => M.unit (a/b))
     } yield r
   }
 
