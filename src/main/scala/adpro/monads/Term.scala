@@ -83,20 +83,28 @@ object StateEvaluator {
 
 }
 
-// // Section 2.4 [Wadler] Variation three: Output
-//
-// object OutputEvaluator {
-//
-//   type Output = String
-//   case class M[+A] (o: Output, a: A)
-//
-//   def line (a :Term) (v :Int) :Output =
-//     "eval(" + a.toString + ") <= " + v.toString + "\n"
-//
-//   // TODO: complete the implementation of the eval function
-//   def eval (term :Term) :M[Int] = ...
-// }
-//
+// Section 2.4 [Wadler] Variation three: Output
+
+object OutputEvaluator {
+
+  type Output = String
+  case class M[+A] (o: Output, a: A)
+
+  def line (a :Term) (v :Int) :Output =
+    "eval(" + a.toString + ") <= " + v.toString + "\n"
+
+  // TODO: complete the implementation of the eval function
+  def eval (term :Term) :M[Int] = term match {
+    case Cons (a) => M[Int] (line(Cons(a))(a), a)
+    case Div (t,u) => {
+      val tm = eval(t)
+      val um = eval(u)
+      val l = line (Div(t,u))(tm.a/um.a)
+      M[Int] (tm.o + um.o + l, tm.a/um.a)
+    }
+  }
+}
+
 // // Section 2.5 [Wadler] A monadic evaluator
 //
 // // The following are two generic monadic interfaces (one for classes, one for

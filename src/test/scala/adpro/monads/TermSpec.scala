@@ -90,28 +90,28 @@ class  TermSpec extends FlatSpec with Checkers {
   { intercept[java.lang.ArithmeticException] {
     StateEvaluator.eval (error).step (0) } }
 
-//  // Section 2.4 [Wadler] Variation three: Output
-//
-//  val result = "eval(Cons(1972)) <= 1972\n" +
-//               "eval(Cons(2)) <= 2\n" +
-//               "eval(Div(Cons(1972),Cons(2))) <= 986\n" +
-//               "eval(Cons(23)) <= 23\n" +
-//               "eval(Div(Div(Cons(1972),Cons(2)),Cons(23))) <= 42\n"
-//
-//  behavior of "Output eval (answer)"
-//  it should "give good 'result' and string output" in {
-//    val r = OutputEvaluator.eval(answer)
-//    r.a shouldBe 42
-//    r.o shouldBe result
-//  }
-//  it should "return simple result for a constant" in {
-//    val r = OutputEvaluator.eval(const)
-//    r.a shouldBe 42
-//    r.o shouldBe "eval(Cons(42)) <= 42\n"
-//  }
-//  it should "throw a scala exception on division by 0" in
-//  { intercept[java.lang.ArithmeticException] {
-//    OutputEvaluator.eval (error) } }
+  // Section 2.4 [Wadler] Variation three: Output
+
+  val result = "eval(Cons(1972)) <= 1972\n" +
+               "eval(Cons(2)) <= 2\n" +
+               "eval(Div(Cons(1972),Cons(2))) <= 986\n" +
+               "eval(Cons(23)) <= 23\n" +
+               "eval(Div(Div(Cons(1972),Cons(2)),Cons(23))) <= 42\n"
+
+  behavior of "Output eval (answer)"
+  it should "give good 'result' and string output" in {
+    val r = OutputEvaluator.eval(answer)
+    r.a shouldBe 42
+    r.o shouldBe result
+  }
+  it should "return simple result for a constant" in {
+    val r = OutputEvaluator.eval(const)
+    r.a shouldBe 42
+    r.o shouldBe "eval(Cons(42)) <= 42\n"
+  }
+  it should "throw a scala exception on division by 0" in
+  { intercept[java.lang.ArithmeticException] {
+    OutputEvaluator.eval (error) } }
 //
 //
 //
