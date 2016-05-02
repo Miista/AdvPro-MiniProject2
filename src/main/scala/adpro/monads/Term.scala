@@ -33,28 +33,36 @@ object BasicEvaluator {
 
 // Uncomment sections below as you proceed
 
-// // Section 2.2 [Wadler] Variation one: Exceptions
+// Section 2.2 [Wadler] Variation one: Exceptions
 
-// object ExceptionEvaluator {
-//
-//   // an implementation of Wadler's types in Scala
-//   type Exception = String
-//   trait M[+A]
-//   case class Raise (e: String) extends M[Nothing]
-//   case class Return[A] (a: A) extends M[A]
-//
-//   // an implementation of direct exception evaluator in Scala:
-//   // TODO: complete in place of "..."
-//
-//   def eval (term :Term) :M[Int] = term match {
-//     case Cons(a) => Return (a)
-//     case Div(t,u) => ...
-//   }
-//
-//   // Once you are done reflect how massive was the change from the
-//   // BasicEvaluator to the exception evaluator (no need to write anything).
-// }
-//
+object ExceptionEvaluator {
+
+  // an implementation of Wadler's types in Scala
+  type Exception = String
+  trait M[+A]
+  case class Raise (e: String) extends M[Nothing]
+  case class Return[A] (a: A) extends M[A]
+
+  // an implementation of direct exception evaluator in Scala:
+  // TODO: complete in place of "..."
+
+  def eval (term :Term) :M[Int] = term match {
+    case Cons(a) => Return (a)
+    case Div(t,u) => eval(t) match {
+      case Raise(e) => Raise(e)
+      case Return(a) => eval(u) match {
+        case Raise(e) => Raise(e)
+        case Return(b) => if (b == 0)
+                            Raise("divide by zero")
+                          else Return(a/b)
+      }
+    }
+  }
+
+  // Once you are done reflect how massive was the change from the
+  // BasicEvaluator to the exception evaluator (no need to write anything).
+}
+
 // // Section 2.3 [Wadler] Variation two: State
 //
 // object StateEvaluator {

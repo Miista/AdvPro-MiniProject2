@@ -65,16 +65,16 @@ class  TermSpec extends FlatSpec with Checkers {
     )
   }
 
-//  // Section 2.2
-//
-//  behavior of "Exception eval"
-//  it should "answer Return(42) to our division [Wadler]" in
-//  { ExceptionEvaluator.eval (answer) shouldBe ExceptionEvaluator.Return(42) }
-//  it should "answer Return(42) to a constant" in
-//  { ExceptionEvaluator.eval (const) shouldBe ExceptionEvaluator.Return(42) }
-//  it should "return an exception value for a division by zero" in
-//  { ExceptionEvaluator.eval (error) shouldBe a [ExceptionEvaluator.Raise] }
-//
+  // Section 2.2
+
+  behavior of "Exception eval"
+  it should "answer Return(42) to our division [Wadler]" in
+  { ExceptionEvaluator.eval (answer) shouldBe ExceptionEvaluator.Return(42) }
+  it should "answer Return(42) to a constant" in
+  { ExceptionEvaluator.eval (const) shouldBe ExceptionEvaluator.Return(42) }
+  it should "return an exception value for a division by zero" in
+  { ExceptionEvaluator.eval (error) shouldBe a [ExceptionEvaluator.Raise] }
+
 //  // Section 2.3 [Wadler] Variation two: State
 //
 //  behavior of "State eval"
