@@ -115,34 +115,34 @@ class  TermSpec extends FlatSpec with Checkers {
 //
 //
 //
-//  // Section 2.6 [Wadler] Variation zero, revisited: The basic evaluator
-//
-//  behavior of "Basic monadic eval"
-//
-//  it should "be 42 [Wadler]" in
-//  { BasicEvaluatorWithMonads.eval (answer).a shouldBe 42 }
-//  it should "return 42 for a constant " in {
-//    BasicEvaluatorWithMonads.eval (const).a shouldBe 42 }
-//
-//  it should "throw an exception" in
-//  { intercept[java.lang.ArithmeticException]
-//  { BasicEvaluatorWithMonads.eval (error) } }
-//
-//  it should "crash on unsafe terms" in check {
-//    forAll (genUnsafeTerm) ( (t: Term) => {
-//      intercept[java.lang.ArithmeticException] {
-//      BasicEvaluatorWithMonads.eval (t).a}; true }
-//    )
-//  }
-//
-//
-//
-//  behavior of "Basic evalutors"
-//
-//  it should "behave identically" in check {
-//    forAll (genSafeTerm) ( (t: Term) =>
-//      BasicEvaluatorWithMonads.eval (t).a == BasicEvaluator.eval(t))
-//  }
+  // Section 2.6 [Wadler] Variation zero, revisited: The basic evaluator
+
+  behavior of "Basic monadic eval"
+
+  it should "be 42 [Wadler]" in
+  { BasicEvaluatorWithMonads.eval (answer).a shouldBe 42 }
+  it should "return 42 for a constant " in {
+    BasicEvaluatorWithMonads.eval (const).a shouldBe 42 }
+
+  it should "throw an exception" in
+  { intercept[java.lang.ArithmeticException]
+  { BasicEvaluatorWithMonads.eval (error) } }
+
+  it should "crash on unsafe terms" in check {
+    forAll (genUnsafeTerm) ( (t: Term) => {
+      intercept[java.lang.ArithmeticException] {
+      BasicEvaluatorWithMonads.eval (t).a}; true }
+    )
+  }
+
+
+
+  behavior of "Basic evalutors"
+
+  it should "behave identically" in check {
+    forAll (genSafeTerm) ( (t: Term) =>
+      BasicEvaluatorWithMonads.eval (t).a == BasicEvaluator.eval(t))
+  }
 //
 //
 //  // Section 2.7 [Wadler] Variation one, revisited: Exceptions
